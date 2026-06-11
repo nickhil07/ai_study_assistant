@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>AI Study Assistant</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+
+body{
+background:#0f172a;
+color:white;
+font-family:Segoe UI;
+margin:0;
+}
+
+.sidebar{
+position:fixed;
+left:0;
+top:0;
+width:280px;
+height:100vh;
+background:#111827;
+padding:20px;
+overflow:auto;
+border-right:1px solid #334155;
+}
+
+.logo{
+font-size:24px;
+font-weight:700;
+margin-bottom:25px;
+}
+
+.history-item{
+background:#1e293b;
+padding:10px;
+margin-bottom:10px;
+border-radius:10px;
+font-size:14px;
+}
+
+.main{
+margin-left:280px;
+padding:30px;
+}
+
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+.card-box{
+background:#1e293b;
+border:none;
+border-radius:20px;
+padding:20px;
+margin-bottom:20px;
+box-shadow:0 8px 20px rgba(0,0,0,.25);
+}
+
+textarea{
+background:#0f172a !important;
+color:white !important;
+border:1px solid #334155 !important;
+border-radius:15px !important;
+}
+
+textarea:focus{
+box-shadow:none !important;
+}
+
+.btn-ai{
+background:linear-gradient(
+90deg,
+#2563eb,
+#06b6d4
+);
+border:none;
+padding:12px;
+width:100%;
+font-weight:600;
+border-radius:12px;
+color:white;
+}
+
+.result-box{
+background:#0f172a;
+padding:15px;
+border-radius:12px;
+margin-top:10px;
+line-height:1.8;
+}
+
+.loader{
+display:none;
+text-align:center;
+padding:20px;
+}
+
+@media(max-width:900px){
+
+.sidebar{
+display:none;
+}
+
+.main{
+margin-left:0;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<div class="logo">
+🎓 Study AI
+</div>
+
+<h5>
+Recent Questions
+</h5>
+
+<div id="history">
+Loading...
+</div>
+
+</div>
+
+<div class="main">
+
+<div class="topbar">
+
+<h2>
+AI Study Assistant
+</h2>
+
+<div>
+
+<a href="/profile"
+class="btn btn-primary">
+Profile
+</a>
+
+<a href="/logout"
+class="btn btn-danger">
+Logout
+</a>
+
+</div>
+
+</div>
+
+<div class="card-box">
+
+<h4>
+<i class="fa-solid fa-magnifying-glass"></i>
+ Ask Your Question
+</h4>
+
+<textarea
+id="question"
+rows="6"
+class="form-control"
+placeholder="Explain AI, Machine Learning, Data Science...">
+</textarea>
+
+<button
+class="btn-ai mt-3"
+onclick="askAI()">
+
+<i class="fa-solid fa-paper-plane"></i>
+ Generate Study Material
+
+</button>
+
+</div>
+
+<div id="loader" class="loader">
+
+<div class="spinner-border text-info"></div>
+
+<p class="mt-3">
+Generating Study Material...
+</p>
+
+</div>
+
+<div class="card-box">
+
+<h4>
+📖 Detailed Explanation
+</h4>
+
+<div
+id="answer"
+class="result-box">
+Waiting for question...
+</div>
+
+</div>
+
+<div class="card-box">
+
+<h4>
+🎯 Important Points
+</h4>
+
+<div
+id="points"
+class="result-box">
+Waiting for question...
+</div>
+
+</div>
+
+<div class="card-box">
+
+<h4>
+📝 MCQ Quiz
+</h4>
+
+<div
+id="mcq"
+class="result-box">
+Waiting for question...
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+loadHistory();
+
+async function askAI(){
+
+const question =
+document.getElementById("question").value;
+
+if(!question){
+alert("Enter Question");
+return;
+}
+
+document.getElementById("loader")
+.style.display="block";
+
+const response =
+await fetch("/ask",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+question:question
+})
+});
+
+const data =
+await response.json();
+
+document.getElementById("loader")
+.style.display="none";
+
+document.getElementById("answer")
+.innerHTML =
+(data.answer || "")
+.replace(/\n/g,"<br>");
+
+document.getElementById("points")
+.innerHTML =
+(data.points || "")
+.replace(/\n/g,"<br>");
+
+document.getElementById("mcq")
+.innerHTML =
+(data.mcq || "")
+.replace(/\n/g,"<br>");
+
+loadHistory();
+
+}
+
+async function loadHistory(){
+
+const response =
+await fetch("/history");
+
+const data =
+await response.json();
+
+let html="";
+
+data.forEach(item=>{
+
+html += `
+<div class="history-item">
+${item}
+</div>
+`;
+
+});
+
+document.getElementById("history")
+.innerHTML = html;
+
+}
+
+</script>
+
+</body>
+</html>
