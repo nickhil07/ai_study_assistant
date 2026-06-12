@@ -86,7 +86,7 @@ def ask_ai(prompt):
 
 @app.route("/")
 def home():
-    return "MY-LATEST-COMMIT-999"
+    return "FORCE-DEPLOY-99999"
 
 @app.route("/ask", methods=["POST"])
 def ask():
