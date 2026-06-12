@@ -86,7 +86,7 @@ def ask_ai(prompt):
 
 @app.route("/")
 def home():
-    return "VERSION-12345"
+    return "MY-LATEST-COMMIT-999"
 
 @app.route("/ask", methods=["POST"])
 def ask():
