@@ -19,7 +19,6 @@ import markdown
 
 # .env load
 load_dotenv()
-import os
 
 # OpenRouter client
 client = OpenAI(
