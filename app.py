@@ -27,6 +27,8 @@ client = OpenAI(
     api_key=os.getenv("OPENROUTER_API_KEY")
 )
 
+print("APP STARTED SUCCESSFULLY")
+
 app = Flask(__name__)
 app.secret_key = "study_secret_key"
 app.config["UPLOAD_FOLDER"] = "static/uploads"
