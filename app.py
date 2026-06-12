@@ -20,14 +20,12 @@ import markdown
 # .env load
 load_dotenv()
 import os
-print("OPENROUTER_API_KEY =", os.getenv("OPENROUTER_API_KEY"))
+
 # OpenRouter client
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
     api_key=os.getenv("OPENROUTER_API_KEY")
 )
-
-print("VERSION-12345 STARTED")
 
 app = Flask(__name__)
 app.secret_key = "study_secret_key"
@@ -86,7 +84,7 @@ def ask_ai(prompt):
 
 @app.route("/")
 def home():
-    return "FORCE-DEPLOY-99999"
+    return render_template("index.html")
 
 @app.route("/ask", methods=["POST"])
 def ask():
