@@ -84,13 +84,9 @@ def ask_ai(prompt):
         print("AI ERROR:", e)
         return f"Error: {str(e)}"
 
-
 @app.route("/")
 def home():
-    if "user_id" not in session:
-        return redirect("/login")
-    return render_template("index.html", username=session.get("username"))
-
+    return "Railway Working"
 
 @app.route("/ask", methods=["POST"])
 def ask():
